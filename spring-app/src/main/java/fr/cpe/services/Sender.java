@@ -1,11 +1,12 @@
 package fr.cpe.services;
 
-import fr.cpe.dto.Personne;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
+
+import fr.cpe.dto.Personne;
+import jakarta.annotation.PostConstruct;
 
 @Service
 public class Sender {
@@ -26,6 +27,7 @@ public class Sender {
 
     @PostConstruct
     public void init() {
+        System.out.println("Initializing Sender with queue: " + environment.getProperty(QUEUE_KEY));
         queue = environment.getProperty(QUEUE_KEY);
     }
 
@@ -34,9 +36,9 @@ public class Sender {
     }
 
     public void sendMessage(Personne personne) {
-
-        // Send a message with a POJO - the template reuse the message converter
         System.out.println("Sending an personne message.");
+        personne.setName(personne.getName() + " from Java");
+        personne.setPrenom(personne.getPrenom() + " from Java");
         jmsTemplate.convertAndSend(queue, personne);
     }
 }
