@@ -14,31 +14,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 ioServer.on("connection", function (socket) {
     console.log("a user connected");
-    try {
-        stompit.subscribe((result) => {
-            console.log("in io to socket=" + socket + " callback with result: ", result);
-            try {
-                socket.emit("notify", result);
-                socket.disconnect();
-                console.log("end #################")
-            } catch (e) {
-                console.log(e);
-            }
-        });
-    } catch (e) {
-        console.log(e);
-    }
+
+    socket.on("disconnect", () => {
+        console.log("Client disconnected");
+    });
 });
 
 app.post("/", (req, res) => {
     console.log(`POST / ${req.body}`);
-    try {
-        stompit.send(JSON.stringify(req.body));
-        res.send("Message sent").status(200);
-    } catch (e) {
-        console.log(e);
-        res.send("Error sending message").status(500);
-    }
+    stompit.send(JSON.stringify(req.body));
+    res.send("Message sent").status(200);
+});
+
+stompit.subscribe((msg) => {
+    console.log("SOCKET: sending mesg to client" + msg);
+    ioServer.emit("notify", msg);
+    console.log("SOCKET: message sent to client");
 });
 
 export default server;

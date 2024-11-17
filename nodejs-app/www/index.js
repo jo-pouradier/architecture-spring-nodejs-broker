@@ -1,4 +1,5 @@
 let socket = io();
+let counterDiv = 0;
 socket.on("notify", function (msg) {
     console.log(msg);
     console.log(typeof msg);
@@ -7,12 +8,9 @@ socket.on("notify", function (msg) {
     elem.setAttribute("id", counterDiv);
     counterDiv++;
     elem.innerHTML = msg;
-    let count = msg.split("{").length;
-    elem.setAttribute("id", count);
     document.getElementById("personnes").appendChild(elem);
 });
 
-let counterDiv = 0;
 function go() {
     let name = document.getElementById("nom").value;
     let prenom = document.getElementById("prenom").value;

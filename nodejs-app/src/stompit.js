@@ -39,13 +39,13 @@ class Stompit {
                 return;
             }
 
-            console.log("STOMPIT: sending message: " + msg, " of type: " + typeof msg);
+            console.log("STOMPIT: sending message to queue: " + msg, " of type: " + typeof msg);
             const frame = client.send(this.sendHeaders);
             frame.write(msg);
             frame.end();
 
             client.disconnect();
-            console.log("STOMPIT: message sent, disconnect");
+            console.log("STOMPIT: message sent, disconnect from queue");
         });
     }
 
@@ -64,10 +64,9 @@ class Stompit {
                     if (error) {
                         return console.error(error);
                     }
-                    console.log("STOMPIT: received message: " + body);
+                    console.log("STOMPIT: received message from queue: " + body);
                     callback(body);
                     client.ack(message);
-                    // client.disconnect();
                 });
             });
         });
